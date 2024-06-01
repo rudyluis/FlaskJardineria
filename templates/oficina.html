@@ -42,7 +42,7 @@
                             <td>{{ oficina.lineadireccion1 }}</td>
                             <td>{{ oficina.lineadireccion2 }}</td>
                             <td>{{ oficina.region }}</td>
-                            <td>
+                            <td> 
                                 <button type="button" class="btn btn-primary btn-sm" onclick="editarOficina('{{oficina.idoficina}}', '{{ oficina.codigooficina }}', '{{ oficina.ciudad }}', '{{ oficina.pais }}', '{{ oficina.codigopostal }}', '{{ oficina.telefono }}', '{{ oficina.lineadireccion1 }}', '{{ oficina.lineadireccion2 }}', '{{ oficina.region }}')">Editar</button>
                             </td>
                             <td><a href="{{ url_for('eliminar_oficina', id_oficina=oficina.idoficina) }}" class="btn btn-danger btn-sm">Eliminar</a></td>

@@ -24,7 +24,7 @@ def listar_oficina():
     session.close()
     return render_template('oficina.html',oficinas=oficinas)
 
-
+ 
 # Agregar oficina
 @app.route('/oficina/agregar', methods=['GET', 'POST'])
 def agregar_oficina():

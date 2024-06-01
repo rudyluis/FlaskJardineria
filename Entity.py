@@ -424,7 +424,7 @@ class Oficina(Base):
     lineadireccion1=Column(String(50), nullable=False)
     lineadireccion2=Column(String(50))
     empleado= relationship('Empleado', back_populates='oficina')
-
+ 
     @staticmethod
     def mostrar_todas_las_oficinas(session):
         oficinas = session.query(Oficina).all()

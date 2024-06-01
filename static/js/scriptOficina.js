@@ -20,3 +20,4 @@ function editarOficina(idOficina, codigoOficina, ciudad, pais, codigopostal, tel
     });
     myModal.show();
 }
+ 
