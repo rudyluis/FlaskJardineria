@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+
+{% block title %}Oficina {% endblock %} 
+
+{% block content %}
+
+<div class="container">
+    <div class="card shadow">
+        <div class="card-body">
+            <h5 class="card-title">Oficinas</h5>
+
+
+            <!-- Botón para abrir modal de agregar oficina -->
+            <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#modalAgregarOficina">Agregar Oficina</button>
+
+            <!-- Tabla -->
+            <table class="table table-bordered table table-striped table table-hover" id="oficinasTable">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Código de Oficina</th>
+                        <th scope="col">Ciudad</th>
+                        <th scope="col">País</th>
+                        <th scope="col">Código Postal</th>
+                        <th scope="col">Teléfono</th>
+                        <th scope="col">Línea de Dirección 1</th>
+                        <th scope="col">Línea de Dirección 2</th>
+                        <th scope="col">Región</th>
+                        <th scope="col">Editar</th>
+                        <th scope="col">Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for oficina in oficinas %}
+                        <tr>
+                            <td>{{ oficina.idoficina }}</td>
+                            <td>{{ oficina.codigooficina }}</td>
+                            <td>{{ oficina.ciudad }}</td>
+                            <td>{{ oficina.pais }}</td>
+                            <td>{{ oficina.codigopostal }}</td>
+                            <td>{{ oficina.telefono }}</td>
+                            <td>{{ oficina.lineadireccion1 }}</td>
+                            <td>{{ oficina.lineadireccion2 }}</td>
+                            <td>{{ oficina.region }}</td>
+                            <td>
+                                <button type="button" class="btn btn-primary btn-sm" onclick="editarOficina('{{oficina.idoficina}}', '{{ oficina.codigooficina }}', '{{ oficina.ciudad }}', '{{ oficina.pais }}', '{{ oficina.codigopostal }}', '{{ oficina.telefono }}', '{{ oficina.lineadireccion1 }}', '{{ oficina.lineadireccion2 }}', '{{ oficina.region }}')">Editar</button>
+                            </td>
+                            <td><a href="{{ url_for('eliminar_oficina', id_oficina=oficina.idoficina) }}" class="btn btn-danger btn-sm">Eliminar</a></td>
+
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para agregar oficina -->
+            <div class="modal fade" id="modalAgregarOficina" tabindex="-1" aria-labelledby="modalAgregarOficinaLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalAgregarOficinaLabel">Agregar Oficina</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form action="/oficina/agregar" method="POST">
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="codigooficina" class="form-label">Código de Oficina</label>
+                                    <input type="text" class="form-control" id="codigooficina" name="codigooficina">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="ciudad" class="form-label">Ciudad</label>
+                                    <input type="text" class="form-control" id="ciudad" name="ciudad">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="pais" class="form-label">País</label>
+                                    <input type="text" class="form-control" id="pais" name="pais">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="codigopostal" class="form-label">Código Postal</label>
+                                    <input type="text" class="form-control" id="codigopostal" name="codigopostal">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="telefono" class="form-label">Teléfono</label>
+                                    <input type="text" class="form-control" id="telefono" name="telefono">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="lineadireccion1" class="form-label">Línea de Dirección 1</label>
+                                    <input type="text" class="form-control" id="lineadireccion1" name="lineadireccion1">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="lineadireccion2" class="form-label">Línea de Dirección 2</label>
+                                    <input type="text" class="form-control" id="lineadireccion2" name="lineadireccion2">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="region" class="form-label">Región</label>
+                                    <input type="text" class="form-control" id="region" name="region">
+                                </div>
+                                
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                <button type="submit" class="btn btn-primary">Guardar</button>
+                            </div>
+                        </form>
+                        
+                        
+                    </div>
+                </div>
+            </div>
+            <!-- Fin Modal para agregar oficina -->
+<!-- Modal para editar oficina -->
+<div class="modal fade" id="modalEditarOficina" tabindex="-1" aria-labelledby="modalEditarOficinaLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalEditarOficinaLabel">Editar Oficina</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="editarOficinaForm" action="/oficina/editar/" method="POST">
+
+                <div class="modal-body">
+                    <input type="hidden" id="editarIdOficina" name="idoficina">
+                    <div class="mb-3">
+                        <label for="editarCodigoOficina" class="form-label">Código de Oficina</label>
+                        <input type="text" class="form-control" id="editarCodigoOficina" name="codigooficina">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editarCiudad" class="form-label">Ciudad</label>
+                        <input type="text" class="form-control" id="editarCiudad" name="ciudad">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editarPais" class="form-label">País</label>
+                        <input type="text" class="form-control" id="editarPais" name="pais">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editarCodigopostal" class="form-label">Código Postal</label>
+                        <input type="text" class="form-control" id="editarCodigopostal" name="codigopostal">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editarTelefono" class="form-label">Teléfono</label>
+                        <input type="text" class="form-control" id="editarTelefono" name="telefono">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editarLineadireccion1" class="form-label">Línea de Dirección 1</label>
+                        <input type="text" class="form-control" id="editarLineadireccion1" name="lineadireccion1">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editarLineadireccion2" class="form-label">Línea de Dirección 2</label>
+                        <input type="text" class="form-control" id="editarLineadireccion2" name="lineadireccion2">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editarRegion" class="form-label">Región</label>
+                        <input type="text" class="form-control" id="editarRegion" name="region">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}
+{% block javascripts %}
+<script src="{{ url_for('static', filename='js/scriptOficina.js') }}"></script>
+
+{% endblock javascripts %}
+
+
+
+</body>
+</html>
