@@ -1,9 +1,13 @@
-from flask import Flask, render_template, request, redirect, url_for
-from sqlalchemy import create_engine
+from flask import Flask, render_template, request, redirect, url_for, flash
+from sqlalchemy import create_engine,desc
 from sqlalchemy.orm import sessionmaker
 from flask import jsonify
-from Entity import Oficina, Base
+from Entity import Oficina,Empleado, Base
+from sqlalchemy.exc import IntegrityError
 app= Flask(__name__)
+
+app.secret_key='123456'
+
 
 # Crear conexión a la base de datos
 engine = create_engine('postgresql://postgres:123456@localhost/jardineria')
@@ -78,7 +82,15 @@ def eliminar_oficina(id_oficina):
     session.close()
     return redirect(url_for('listar_oficina'))
 
-
+### listar empleado
+@app.route('/empleado')
+def listar_empleado():
+    session = DBSession()
+    empleados = session.query(Empleado).all()
+    oficinas = session.query(Oficina).all()
+    
+    return render_template('empleado.html',empleados=empleados, 
+                           oficinas=oficinas,empleadoJefes=empleados)
 
 if __name__=='__main__':
     app.run(debug=True)
