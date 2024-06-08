@@ -144,6 +144,56 @@ def agregar_empleado():
 
 
 
+# Eliminar oficina
+@app.route('/empleado/eliminar/<int:id_empleado>')
+def eliminar_empleado(id_empleado):
+    try: 
+
+        session = DBSession()
+        empleado= session.query(Empleado).filter_by(idempleado=id_empleado).first()
+
+        session.delete(empleado)
+        session.commit()
+        session.close()
+        flash('Se elimino el registro correctamente', 'error')
+        return redirect(url_for('listar_empleado'))
+    except IntegrityError as e:
+        # Manejo de violaciones de restricciones únicas
+        e._message
+        flash(f'Error: No se puede eliminar el registro por que esta vinculado {e}' , 'error')
+        return redirect(url_for('listar_empleado'))
+
+#Editar empleado
+@app.route('/empleado/editarDatos',methods=['POST'])
+def editar_datos_empleado():
+    try: 
+
+        id_empleado = request.form['id_empleado']
+        session = DBSession()
+        empleado= session.query(Empleado).filter_by(idempleado=id_empleado).first()
+        session.close()
+        # Devolver los detalles del empleado como un JSON
+        if empleado:
+            return jsonify({
+                'id_empleado': empleado.idempleado,
+                'codigo_empleado': empleado.codigo_empleado,
+                'nombre': empleado.nombre,
+                'apellido1': empleado.apellido1,
+                'apellido2': empleado.apellido2,
+                'extension': empleado.extension,
+                'email': empleado.email,
+                'idoficina': empleado.idoficina,
+                'idempleadojefe': empleado.idempleadojefe,
+                'puesto': empleado.puesto
+            })
+        else:
+            return jsonify({'error': 'No se encontró el empleado con el ID proporcionado'})
+    except IntegrityError as e:
+        # Manejo de violaciones de restricciones únicas
+        e._message
+        flash(f'Error: No se puede Obtener el registro  {e}' , 'error')
+        return redirect(url_for('listar_empleado'))
+
 
 if __name__=='__main__':
     app.run(debug=True)

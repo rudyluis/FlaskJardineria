@@ -58,7 +58,14 @@
                             <td>{{ empleado.oficina.ciudad }}</td>
                             <td>{{ empleado.jefe.nombre }}-{{ empleado.jefe.apellido1 }}</td>
                             <td>{{ empleado.puesto }}</td>
-                            
+                            <td>
+                                <!-- Botón para editar empleado -->
+                                <button type="button" class="btn btn-primary btn-sm" onclick="editarEmpleado('{{ empleado.idempleado }}')">Editar</button>
+                            </td> 
+                            <td>
+                                <!-- Enlace para eliminar empleado -->
+                                <a href="{{ url_for('eliminar_empleado', id_empleado=empleado.idempleado) }}" class="btn btn-danger btn-sm">Eliminar</a>
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>
