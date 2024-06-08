@@ -5,6 +5,19 @@
 {% block content %}
 
 
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+  <ul>
+    {% for message in messages %}
+      <div class="alert alert-primary alert-dismissible fade show" role="alert">
+        <li>{{ message }}</li>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  </ul>
+{% endif %}
+{% endwith %}
+
 <div class="container">
     <div class="card shadow">
         <div class="card-body">

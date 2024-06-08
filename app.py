@@ -92,6 +92,59 @@ def listar_empleado():
     return render_template('empleado.html',empleados=empleados, 
                            oficinas=oficinas,empleadoJefes=empleados)
 
+
+#### agregar empleado
+@app.route('/empleado/agregar', methods=['GET', 'POST'])
+def agregar_empleado():
+    if request.method == 'POST':
+        try:
+            session = DBSession()
+            # Obtener los valores del formulario
+            
+            codigo_empleado = request.form['codigoEmpleado']
+            nombre = request.form['nombre']
+            apellido1 = request.form['apellido1']
+            apellido2 = request.form['apellido2']
+            extension = request.form['extension']
+            email = request.form['email']
+            idoficina = request.form['idOficina']
+            idempleadojefe = request.form['idEmpleadoJefe']
+            puesto = request.form['puesto']
+            print(request.form)
+            # Validación de datos
+            if not codigo_empleado or not nombre or not apellido1 or not extension or not email or not idoficina:
+                # Manejo de campos obligatorios
+                flash('Todos los campos son obligatorios', 'error')
+                return redirect(url_for('listar_empleado'))
+            print(request.form)
+            # Agregar empleado a la base de datos
+            Empleado.agregarEmpleado(session,
+                                     codigo_empleado=codigo_empleado,
+                                     nombre=nombre,
+                                     apellido1=apellido1,
+                                     apellido2=apellido2,
+                                     extension=extension,
+                                     email=email,
+                                     id_oficina=idoficina,
+                                     id_empleado_jefe=idempleadojefe,
+                                     puesto=puesto)
+            session.close()
+            flash('Empleado agregado correctamente', 'success')
+            return redirect(url_for('listar_empleado'))
+        except IntegrityError as e:
+            # Manejo de violaciones de restricciones únicas
+            flash('Error: El código de empleado ya existe', 'error')
+            return redirect(url_for('listar_empleado'))
+        except Exception as e:
+            # Manejo de otros errores
+            flash(f'Error al agregar empleado {e}', 'error')
+            return redirect(url_for('listar_empleado'))
+    else:
+        return redirect(url_for('listar_empleado'))
+
+
+
+
 if __name__=='__main__':
     app.run(debug=True)
 
