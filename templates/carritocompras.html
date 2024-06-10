@@ -18,7 +18,7 @@
         <div class="card-body">
             <h5 class="card-title">Carrito de Compras</h5>
 
-            <form method="post" action="#">
+            <form method="post" action="{{ url_for('guardarCarrito') }}">
                 <div class="mb-3">
                     <label for="cliente" class="form-label">Cliente</label>
                     <select class="form-select" id="cliente" name="cliente" required>

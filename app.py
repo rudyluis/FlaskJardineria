@@ -2,8 +2,9 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from sqlalchemy import create_engine,desc
 from sqlalchemy.orm import sessionmaker
 from flask import jsonify
-from Entity import Oficina,Empleado,Cliente, Producto, Base
+from Entity import Oficina,Empleado,Cliente, Producto,Pedido, Base
 from sqlalchemy.exc import IntegrityError
+from datetime import date
 app= Flask(__name__)
 
 app.secret_key='123456'
@@ -246,6 +247,53 @@ def carrito_compras():
     session.close()
     return render_template('carritocompras.html', clientes=clientes, productos=productos)
 
+@app.route('/guardarCarrito', methods=['POST'])
+def guardarCarrito():
+    try:
+        session = DBSession()
+        id_cliente = request.form['cliente']
+        productos_seleccionados = request.form.getlist('productos[]')
+        cantidades = request.form.getlist('cantidades[]')
+       
+        Pedido.agregar_pedido(session,
+                                codigopedido=1234,  # Generar un código de pedido único
+                                fechapedido=date.today(),
+                                fechaesperada=date.today(),
+                                estado='Pendiente',
+                                idcliente=id_cliente
+                              )
+
+        ultimo_pedido = session.query(Pedido).order_by(desc(Pedido.idpedido)).first()
+        ultimo_id_pedido = ultimo_pedido.idpedido
+        linea=0
+        for id_producto, cantidad in zip(productos_seleccionados, cantidades):
+            print(id_producto)
+            print(cantidad)
+            print(ultimo_id_pedido)
+            producto = session.query(Producto).filter_by(idproducto=id_producto).first()
+            print(producto.precioventa)
+            linea+=1
+            print(linea)
+            DetallePedido.agregarDetallePedido(
+                session,
+                id_pedido=ultimo_id_pedido,
+                id_producto=id_producto,
+                cantidad=cantidad,
+                precio_unidad=producto.precioventa,
+                numero_linea=linea # Puedes gestionar la lógica para el número de línea según sea necesario
+            )
+            ##session.add(detalle_pedido)
+
+        ##session.commit()
+        ##session.close()
+        print('Pedido guardado correctamente')
+        flash('Pedido guardado correctamente', 'success')
+    except Exception as e:
+        session.rollback()
+        session.close()
+        flash(f'Error al guardar el pedido: {e}', 'error')
+    
+    return redirect(url_for('carrito_compras'))    
 
 
 if __name__=='__main__':
