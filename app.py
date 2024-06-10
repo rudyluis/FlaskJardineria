@@ -144,7 +144,7 @@ def agregar_empleado():
 
 
 
-# Eliminar oficina
+# Eliminar empleado
 @app.route('/empleado/eliminar/<int:id_empleado>')
 def eliminar_empleado(id_empleado):
     try: 
@@ -159,7 +159,6 @@ def eliminar_empleado(id_empleado):
         return redirect(url_for('listar_empleado'))
     except IntegrityError as e:
         # Manejo de violaciones de restricciones únicas
-        e._message
         flash(f'Error: No se puede eliminar el registro por que esta vinculado {e}' , 'error')
         return redirect(url_for('listar_empleado'))
 
@@ -194,6 +193,51 @@ def editar_datos_empleado():
         flash(f'Error: No se puede Obtener el registro  {e}' , 'error')
         return redirect(url_for('listar_empleado'))
 
+# Editar oficina
+@app.route('/empleado/editar/<int:id_empleado>', methods=['GET', 'POST'])
+def editar_empleado(id_empleado):
+    session = DBSession()
+    if request.method == 'POST':
+        try:
+            # Modificar la oficina con los datos del formulario
+            codigo_empleado = request.form['codigoEmpleado']
+            nombre = request.form['nombre']
+            apellido1 = request.form['apellido1']
+            apellido2 = request.form['apellido2']
+            extension = request.form['extension']
+            email = request.form['email']
+            idoficina = request.form['editarIdOficina']
+            idempleadojefe = request.form['editarIdEmpleadoJefe']
+            puesto = request.form['puesto']
+            
+            Empleado.modificarEmpleado(session,id_empleado, codigo_empleado=codigo_empleado,
+                                        nombre=nombre,
+                                        apellido1=apellido1,
+                                        apellido2=apellido2,
+                                        extension=extension,
+                                        email=email,
+                                        id_oficina=idoficina,
+                                        id_empleado_jefe=idempleadojefe,
+                                        puesto=puesto)
+            session.close()
+            flash('Cambios Guardados exitosamente')
+            return redirect(url_for('listar_empleado'))
+    
+
+        except IntegrityError as e:
+            # Manejo de violaciones de restricciones únicas
+            flash(f'Error: El código de empleado no se puede cambiar {e}', 'error')
+            return redirect(url_for('listar_empleado'))
+        except Exception as e:
+            # Manejo de otros errores
+            flash(f'Error al agregar empleado {e}', 'error')
+            return redirect(url_for('listar_empleado'))
+
+    else:
+        # Obtener los datos de la oficina a editar
+        flash('Error al guardar empleado')
+        return redirect(url_for('listar_empleado')) # Pasar la bandera "editar" a la plantilla
+  ##### para Carrito de compras
 
 if __name__=='__main__':
     app.run(debug=True)
