@@ -1,8 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from sqlalchemy import create_engine,desc
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker,joinedload
 from flask import jsonify
-from Entity import Oficina,Empleado,Cliente, Producto,Pedido, Base
+from Entity import Oficina,Empleado,Cliente, Producto,Pedido,DetallePedido, Base
 from sqlalchemy.exc import IntegrityError
 from datetime import date
 app= Flask(__name__)
@@ -295,6 +295,14 @@ def guardarCarrito():
     
     return redirect(url_for('carrito_compras'))    
 
+##### para Carrito de compras
+@app.route('/pedido')
+def listar_pedido():
+    session = DBSession()
+    ##Pedidos = session.query(Pedido).all()
+    Pedidos = session.query(Pedido).options(joinedload(Pedido.cliente)).all()
+    session.close()
+    return render_template('pedido.html', Pedidos=Pedidos)
 
 if __name__=='__main__':
     app.run(debug=True)

@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Empleado{% endblock %} 
+
+{% block content %}
+
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+  <ul>
+    {% for message in messages %}
+      <div class="alert alert-primary alert-dismissible fade show" role="alert">
+        <li>{{ message }}</li>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  </ul>
+{% endif %}
+{% endwith %}
+
+<div class="container">
+    <div class="card shadow">
+        <div class="card-body">
+            <h5 class="card-title">Lista de Pedidos</h5>
+
+
+            <!-- Botón para abrir modal de agregar empleado -->
+            <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#modalAgregarEmpleado">Agregar Pedido</button>
+
+            <!-- Tabla de empleados -->
+            <table class="table table-bordered table table-striped table table-hover" id="dataTable">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Código</th>
+                        <th scope="col">Fecha Pedido</th>
+                        <th scope="col">Fecha Esperada</th>
+                        <th scope="col">Fecha Entrega</th>
+                        <th scope="col">Estado</th>
+                        <th scope="col">Comentarios</th>
+                        <th scope="col">Cliente</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pedido in Pedidos %}
+                        <tr>
+                            <td>{{ pedido.idpedido }}</td>
+                            <td>{{ pedido.codigopedido }}</td>
+                            <td>{{ pedido.fechapedido }}</td>
+                            <td>{{ pedido.fechaesperada }}</td>
+                            <td>{{ pedido.fechaentrega }}</td>
+                            <td>{{ pedido.estado }}</td>
+                            <td>{{ pedido.comentarios }}</td>
+                            <td>{{ pedido.cliente.nombrecliente }}</td>         
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<!-- Script para manejar la edición de empleado -->
+
+
+{% endblock content %}
+{% block javascripts %}
+
+
+{% endblock javascripts %}
+
