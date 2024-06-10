@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}Productos {% endblock %} 
+
+{% block content %}
+<style>
+    .container {
+        max-width: 90%;
+        margin: 20px auto;
+    }
+   
+    .card{
+        background-color: antiquewhite;
+    }
+</style>
+<div class="container" >
+    <div class="card shadow">
+        <div class="card-body">
+            <h5 class="card-title">Carrito de Compras</h5>
+
+            <form method="post" action="#">
+                <div class="mb-3">
+                    <label for="cliente" class="form-label">Cliente</label>
+                    <select class="form-select" id="cliente" name="cliente" required>
+                        <option value="">Selecciona un cliente</option>
+                        {% for cliente in clientes %}
+                            <option value="{{ cliente.idcliente }}">{{ cliente.nombrecliente }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="producto" class="form-label">Producto</label>
+                    <select class="form-select" id="producto">
+                        <option value="">Selecciona un producto</option>
+                        {% for producto in productos %}
+                            <option value="{{ producto.idproducto }}" data-precio="{{ producto.precioventa }}">{{ producto.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+        
+                <div class="mb-3">
+                    <label for="cantidad" class="form-label">Cantidad</label>
+                    <input type="number" class="form-control" id="cantidad" min="1" value="1">
+                </div>
+        
+                <button type="button" class="btn btn-primary" id="agregarProducto">Agregar Producto</button>
+        
+                <h5 class="mt-5">Productos Seleccionados</h5>
+                <table class="table table-striped" id="productosSeleccionados">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio Unitario</th>
+                            <th>Total</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="3">Total del Pedido</th>
+                            <th id="totalPedido">0.00</th>
+                            <th></th>
+                        </tr>
+                    </tfoot>
+                </table>
+        
+                <button type="submit" class="btn btn-success">Guardar Pedido</button>
+            </form>
+
+
+        </div>
+    </div>        
+
+</div>
+
+{% endblock content %}
+{% block javascripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{{ url_for('static', filename='js/scriptProducto.js') }}"></script>
+
+{% endblock javascripts %}

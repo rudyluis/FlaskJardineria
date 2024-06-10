@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from sqlalchemy import create_engine,desc
 from sqlalchemy.orm import sessionmaker
 from flask import jsonify
-from Entity import Oficina,Empleado, Base
+from Entity import Oficina,Empleado,Cliente, Producto, Base
 from sqlalchemy.exc import IntegrityError
 app= Flask(__name__)
 
@@ -237,7 +237,16 @@ def editar_empleado(id_empleado):
         # Obtener los datos de la oficina a editar
         flash('Error al guardar empleado')
         return redirect(url_for('listar_empleado')) # Pasar la bandera "editar" a la plantilla
-  ##### para Carrito de compras
+##### para Carrito de compras
+@app.route('/market')
+def carrito_compras():
+    session = DBSession()
+    clientes = session.query(Cliente).all()
+    productos = session.query(Producto).all()
+    session.close()
+    return render_template('carritocompras.html', clientes=clientes, productos=productos)
+
+
 
 if __name__=='__main__':
     app.run(debug=True)
