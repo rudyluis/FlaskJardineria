@@ -267,9 +267,7 @@ def guardarCarrito():
         ultimo_id_pedido = ultimo_pedido.idpedido
         linea=0
         for id_producto, cantidad in zip(productos_seleccionados, cantidades):
-            print(id_producto)
-            print(cantidad)
-            print(ultimo_id_pedido)
+
             producto = session.query(Producto).filter_by(idproducto=id_producto).first()
             print(producto.precioventa)
             linea+=1
